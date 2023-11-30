@@ -2,12 +2,20 @@ import express from "express";
 import cors from "cors";
 import session from "express-session";
 import dotenv from "dotenv";
+// import db from "./config/Database.js";
+import UserRoute from "./routes/UserRoute.js";
+import ProductRoute from "./routes/ProductRoute.js";
 
 // Memanggil .env
 dotenv.config();
 
 // Memanggil express
 const app = express();
+
+// Inisialisasi pembuatan tabel User dan Product pertama kali ke MySQL
+// (async () => {
+//   await db.sync();
+// })();
 
 app.use(
   session({
@@ -34,6 +42,10 @@ app.use(
 
 // Berfungsi supaya kita bisa menerima data dalam format JSON
 app.use(express.json());
+
+// Middleware untuk routes User dan Product
+app.use(UserRoute);
+app.use(ProductRoute);
 
 // APP_PORT dibuat di .env
 app.listen(process.env.APP_PORT, () => {
