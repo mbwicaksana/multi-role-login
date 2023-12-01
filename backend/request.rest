@@ -1,0 +1,15 @@
+// Create User
+POST http://localhost:5000/users
+Content-Type: application/json
+
+{
+  "name": "staff_1",
+  "email": "staff_1@gmail.com",
+  "password": "1234",
+  "confirmPassword": "1234",
+  "role": "user"
+}
+
+###
+// Get All User
+GET http://localhost:5000/users
