@@ -2,14 +2,14 @@ import express from "express";
 import cors from "cors";
 import session from "express-session";
 import dotenv from "dotenv";
-// import db from "./config/Database.js";
+// import db from "./config/Database.js"; // Komentari baris ini jika tidak digunakan
 import UserRoute from "./routes/UserRoute.js";
 import ProductRoute from "./routes/ProductRoute.js";
 
-// Memanggil .env
+// Memanggil konfigurasi dari file .env
 dotenv.config();
 
-// Memanggil express
+// Membuat aplikasi Express
 const app = express();
 
 // Inisialisasi pembuatan tabel User dan Product pertama kali ke MySQL
@@ -17,37 +17,37 @@ const app = express();
 //   await db.sync();
 // })();
 
+// Menggunakan session untuk menyimpan data sesi pengguna
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
     cookie: {
-      // Gunakan false jika http
-      // Bisa diset menjadi otomatis
+      // Gunakan "auto" jika HTTPS, "false" jika HTTP
       secure: "auto",
     },
   })
 );
 
+// Menggunakan middleware CORS untuk mengizinkan akses dari origin tertentu
 app.use(
   cors({
-    // Berfungsi supaya Frontend dapat mengirimkan request beserta key dan menyertakan credential
+    // Mengizinkan kredensial (misalnya, cookies) untuk dikirim
     credentials: true,
     // Domain yang diizinkan untuk mengakses API kita (bisa berupa array)
-    // React menggunakan port 3000
-    origin: "http://localhost:3000",
+    origin: "http://localhost:3000", // Ganti dengan origin yang sesuai
   })
 );
 
-// Berfungsi supaya kita bisa menerima data dalam format JSON
+// Menggunakan middleware untuk mengizinkan parsing data JSON
 app.use(express.json());
 
-// Middleware untuk routes User dan Product
+// Menggunakan middleware untuk routes User dan Product
 app.use(UserRoute);
 app.use(ProductRoute);
 
-// APP_PORT dibuat di .env
+// Mendengarkan pada port yang ditentukan di file .env
 app.listen(process.env.APP_PORT, () => {
-  console.log("Server is running . . .");
+  console.log("Server is running on port " + process.env.APP_PORT);
 });

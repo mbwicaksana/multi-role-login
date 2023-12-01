@@ -13,3 +13,20 @@ Content-Type: application/json
 ###
 // Get All User
 GET http://localhost:5000/users
+
+###
+// Update User
+PATCH http://localhost:5000/users/e0000d13-3e2b-49d6-9388-b16019c0b29a
+Content-Type: application/json
+
+{
+  "name": "staff_1 updated",
+  "email": "staff_1@gmail.com",
+  "password": "",
+  "confirmPassword": "",
+  "role": "user"
+}
+
+###
+// Delete User
+DELETE http://localhost:5000/users/e0000d13-3e2b-49d6-9388-b16019c0b29a

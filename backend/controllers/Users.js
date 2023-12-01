@@ -1,85 +1,96 @@
-import User from "../models/UserModel.js";
+import Users from "../models/UserModel.js";
 import argon2 from "argon2";
 
 export const getUsers = async (req, res) => {
   try {
-    const response = await User.findAll({
-      // Attribute yang ingin ditampilkan saat mengirim request
+    // Mendapatkan daftar pengguna dari database dengan atribut tertentu
+    const response = await Users.findAll({
       attributes: ["uuid", "name", "email", "role"],
     });
+    // Mengirim respons JSON dengan daftar pengguna
     res.status(200).json(response);
   } catch (e) {
+    // Mengirim respons JSON dengan pesan kesalahan jika terjadi masalah
     res.status(500).json({ msg: e.message });
   }
 };
 
 export const getUserById = async (req, res) => {
   try {
-    const response = await User.findOne({
-      // Attribute yang ingin ditampilkan saat mengirim request
+    // Mencari satu pengguna berdasarkan ID dengan atribut tertentu
+    const response = await Users.findOne({
       attributes: ["uuid", "name", "email", "role"],
       where: {
         uuid: req.params.id,
       },
     });
+    // Mengirim respons JSON dengan data pengguna yang sesuai dengan ID
     res.status(200).json(response);
   } catch (e) {
+    // Mengirim respons JSON dengan pesan kesalahan jika terjadi masalah
     res.status(500).json({ msg: e.message });
   }
 };
 
 export const createUser = async (req, res) => {
-  // Destructuring request body
+  // Destructuring body permintaan untuk mendapatkan data pengguna
   const { name, email, password, confirmPassword, role } = req.body;
 
+  // Memeriksa apakah kata sandi cocok dengan konfirmasi kata sandi
   if (password !== confirmPassword)
     return res.status(400).json({ msg: "Password doesn't match." });
 
-  // Hashing password menggunakan argon2
+  // Hashing kata sandi menggunakan argon2
   const hashPassword = await argon2.hash(password);
 
   try {
-    await User.create({
+    // Membuat pengguna baru dalam database
+    await Users.create({
       name: name,
       email: email,
       password: hashPassword,
       role: role,
     });
+    // Mengirim respons JSON bahwa pendaftaran pengguna berhasil
     res.status(201).json({ msg: "Registration Success !" });
   } catch (e) {
+    // Mengirim respons JSON dengan pesan kesalahan jika terjadi masalah
     res.status(400).json({ msg: e.message });
   }
 };
 
 export const updateUser = async (req, res) => {
-  const user = await User.findOne({
+  // Mencari pengguna berdasarkan ID
+  const user = await Users.findOne({
     where: {
       uuid: req.params.id,
     },
   });
-  // Mengecek apakah User ada di database
+
+  // Memeriksa apakah pengguna ditemukan dalam database
   if (!user) return res.status(404).json({ msg: "User Not Found." });
 
-  // Destructuring Request Body
+  // Destructuring body permintaan untuk mendapatkan data pengguna yang diperbarui
   const { name, email, password, confirmPassword, role } = req.body;
 
   let hashPassword;
 
+  // Memeriksa apakah pengguna menginput kata sandi baru
   if (password === "" || password === null) {
-    // Set Password menjadi Password semula yang ada di database jika user tidak input password baru
+    // Menggunakan kata sandi yang ada dalam database jika pengguna tidak menginput kata sandi baru
     hashPassword = user.password;
   } else {
-    // Set password baru. Ambil data password baru dari Request Body yang sudah di destructure
+    // Hashing kata sandi baru menggunakan argon2
     hashPassword = await argon2.hash(password);
   }
 
-  // Pengecekan jika password tidak sama dengan confirmPassword
+  // Pengecekan apakah kata sandi sama dengan konfirmasi kata sandi
   if (password !== confirmPassword)
     return res.status(400).json({ msg: "Password doesn't match." });
 
-  // Update data user dengan nilai password = hashPassword
   try {
-    await User.update(
+    // Memperbarui data pengguna dalam database
+    await Users.update(
       {
         name: name,
         email: email,
@@ -92,10 +103,36 @@ export const updateUser = async (req, res) => {
         },
       }
     );
+    // Mengirim respons JSON bahwa pengguna berhasil diperbarui
     res.status(200).json({ msg: "User Updated." });
   } catch (e) {
+    // Mengirim respons JSON dengan pesan kesalahan jika terjadi masalah
     res.status(400).json({ msg: e.message });
   }
 };
 
-export const deleteUser = async (req, res) => {};
+export const deleteUser = async (req, res) => {
+  // Mencari pengguna berdasarkan ID
+  const user = await Users.findOne({
+    where: {
+      uuid: req.params.id,
+    },
+  });
+
+  // Memeriksa apakah pengguna ditemukan dalam database
+  if (!user) return res.status(404).json({ msg: "User Not Found." });
+
+  try {
+    // Menghapus pengguna dari database
+    await Users.destroy({
+      where: {
+        id: user.id,
+      },
+    });
+    // Mengirim respons JSON bahwa pengguna berhasil dihapus
+    res.status(200).json({ msg: "User Deleted." });
+  } catch (e) {
+    // Mengirim respons JSON dengan pesan kesalahan jika terjadi masalah
+    res.status(400).json({ msg: e.message });
+  }
+};
