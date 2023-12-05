@@ -42,6 +42,16 @@ Content-Type: application/json
 }
 
 ###
+// Login Admin
+POST http://localhost:5000/login
+Content-Type: application/json
+
+{
+  "email": "admin@gmail.com",
+  "password": "1234"
+}
+
+###
 GET http://localhost:5000/me
 
 
