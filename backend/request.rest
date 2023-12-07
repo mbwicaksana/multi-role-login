@@ -1,4 +1,4 @@
-// Create User
+// CREATE USER
 POST http://localhost:5000/users
 Content-Type: application/json
 
@@ -11,11 +11,12 @@ Content-Type: application/json
 }
 
 ###
-// Get All User
+// GET ALL USER
+// ONLY ADMIN CAN ACCESS THIS REQUEST
 GET http://localhost:5000/users
 
 ###
-// Update User
+// UPDATE USER DATA BASED ON UUID
 PATCH http://localhost:5000/users/e0000d13-3e2b-49d6-9388-b16019c0b29a
 Content-Type: application/json
 
@@ -28,11 +29,11 @@ Content-Type: application/json
 }
 
 ###
-// Delete User
+// DELETE USER BASED ON UUID
 DELETE http://localhost:5000/users/e0000d13-3e2b-49d6-9388-b16019c0b29a
 
 ###
-// Login User
+// LOGIN USER
 POST http://localhost:5000/login
 Content-Type: application/json
 
@@ -42,7 +43,7 @@ Content-Type: application/json
 }
 
 ###
-// Login Admin
+// LOGIN ADMIN
 POST http://localhost:5000/login
 Content-Type: application/json
 
@@ -52,8 +53,23 @@ Content-Type: application/json
 }
 
 ###
+// GET CURRENT USER
 GET http://localhost:5000/me
 
+###
+// LOGOUT CURRENT USER
+DELETE http://localhost:5000/logout
 
 ###
-DELETE http://localhost:5000/logout
+// GET ALL PRODUCTS
+GET http://localhost:5000/products
+
+###
+// CREATE PRODUCT
+POST http://localhost:5000/products
+Content-Type: application/json
+
+{
+  "name": "Product 4",
+  "price": "4000"
+}

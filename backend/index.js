@@ -8,10 +8,8 @@ import UserRoute from "./routes/UserRoute.js";
 import ProductRoute from "./routes/ProductRoute.js";
 import AuthRoute from "./routes/AuthRoute.js";
 
-// Memanggil konfigurasi dari file .env
 dotenv.config();
 
-// Membuat aplikasi Express
 const app = express();
 
 const sessionStore = SequelizeStore(session.Store);
@@ -25,7 +23,6 @@ const store = new sessionStore({
 //   await db.sync();
 // })();
 
-// Menggunakan session untuk menyimpan data sesi pengguna
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -39,27 +36,21 @@ app.use(
   })
 );
 
-// Menggunakan middleware CORS untuk mengizinkan akses dari origin tertentu
 app.use(
   cors({
-    // Mengizinkan kredensial (misalnya, cookies) untuk dikirim
     credentials: true,
-    // Domain yang diizinkan untuk mengakses API kita (bisa berupa array)
-    origin: "http://localhost:3000", // Ganti dengan origin yang sesuai
+    origin: "http://localhost:3000",
   })
 );
 
-// Menggunakan middleware untuk mengizinkan parsing data JSON
 app.use(express.json());
 
-// Menggunakan middleware untuk routes User dan Product
 app.use(UserRoute);
 app.use(ProductRoute);
 app.use(AuthRoute);
 
 // store.sync();
 
-// Mendengarkan pada port yang ditentukan di file .env
 app.listen(process.env.APP_PORT, () => {
   console.log("Server is running on port " + process.env.APP_PORT);
 });
