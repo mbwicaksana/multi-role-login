@@ -1,6 +1,6 @@
 import Products from "../models/ProductModel.js";
 import Users from "../models/UserModel.js";
-
+3
 export const getProducts = async (req, res) => {
   try {
     let response;

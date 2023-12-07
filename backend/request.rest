@@ -3,8 +3,8 @@ POST http://localhost:5000/users
 Content-Type: application/json
 
 {
-  "name": "staff_1",
-  "email": "staff_1@gmail.com",
+  "name": "user 1",
+  "email": "user1@gmail.com",
   "password": "1234",
   "confirmPassword": "1234",
   "role": "user"
@@ -38,7 +38,7 @@ POST http://localhost:5000/login
 Content-Type: application/json
 
 {
-  "email": "staff_1@gmail.com",
+  "email": "user1@gmail.com",
   "password": "1234"
 }
 
@@ -70,6 +70,6 @@ POST http://localhost:5000/products
 Content-Type: application/json
 
 {
-  "name": "Product 4",
-  "price": "4000"
+  "name": "Product 5",
+  "price": "1000"
 }
