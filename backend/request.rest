@@ -65,8 +65,12 @@ DELETE http://localhost:5000/logout
 GET http://localhost:5000/products
 
 ###
-// GET SINGLE PRODUCTS
-GET http://localhost:5000/products
+// GET SINGLE PRODUCTS ROLE USER
+GET http://localhost:5000/products/27487856-482b-43e9-b0fa-c92d4361753d
+
+###
+// GET SINGLE PRODUCTS ROLE ADMIN
+GET http://localhost:5000/products/e76468e8-1aab-4fe7-8674-43a231e3a546
 
 ###
 // CREATE PRODUCT
@@ -78,3 +82,16 @@ Content-Type: application/json
   "price": "1000"
 }
 
+###
+// UPDATE PRODUCT
+PATCH http://localhost:5000/products/e76468e8-1aab-4fe7-8674-43a231e3a546
+Content-Type: application/json
+
+{
+  "name": "Product 5 Updated",
+  "price": "999"
+}
+
+###
+// DELETE PRODUCT
+DELETE http://localhost:5000/products/e76468e8-1aab-4fe7-8674-43a231e3a546

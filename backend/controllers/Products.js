@@ -36,7 +36,7 @@ export const getProducts = async (req, res) => {
 
 export const getProductById = async (req, res) => {
     try {
-        const product = await Product.findOne({
+        const product = await Products.findOne({
             where: {
                 uuid: req.params.id
             }
@@ -89,8 +89,60 @@ export const createProduct = async (req, res) => {
     }
 };
 
-export const updateProduct = (req, res) => {
+export const updateProduct = async (req, res) => {
+    try {
+        const product = await Products.findOne({
+            where: {
+                uuid: req.params.id
+            }
+        });
+        if (!product) return res.status(404).json({msg: "Product Not Found."})
+        const {name, price} = req.body;
+        if (req.role === "admin") {
+            await Products.update({name, price}, {
+                where: {
+                    id: product.id
+                }
+            });
+        } else {
+            if (req.userId !== product.userId) return res.status(403).json({msg: "Access Denied."})
+            await Products.update({name, price}, {
+                where: {
+                    [Op.and]: [{id: product.id}, {userId: req.userId}]
+                }
+            })
+        }
+        res.status(200).json({msg: "Product Updated."});
+    } catch (e) {
+        res.status(500).json({msg: e.message});
+    }
 };
 
-export const deleteProduct = (req, res) => {
+export const deleteProduct = async (req, res) => {
+    try {
+        const product = await Products.findOne({
+            where: {
+                uuid: req.params.id
+            }
+        });
+        if (!product) return res.status(404).json({msg: "Product Not Found."})
+
+        if (req.role === "admin") {
+            await Products.destroy({
+                where: {
+                    id: product.id
+                }
+            });
+        } else {
+            if (req.userId !== product.userId) return res.status(403).json({msg: "Access Denied."})
+            await Products.destroy({
+                where: {
+                    [Op.and]: [{id: product.id}, {userId: req.userId}]
+                }
+            })
+        }
+        res.status(200).json({msg: "Product Deleted."});
+    } catch (e) {
+        res.status(500).json({msg: e.message});
+    }
 };
