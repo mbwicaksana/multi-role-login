@@ -19,12 +19,17 @@ export const Login = async (req, res) => {
   const { uuid, name, email, role } = user;
   res.status(200).json({ uuid, name, email, role });
 };
-
+export const logOut = (req, res) => {
+  req.session.destroy((e) => {
+    if (e) return res.status(400).json({ msg: "Can't log out." });
+    res.status(200).json({ msg: "You have been logged out." });
+  });
+};
 export const Me = async (req, res) => {
   if (!req.session.userId) {
     return res
-      .status(401)
-      .json({ msg: "Please login into your account first." });
+        .status(401)
+        .json({ msg: "Please login into your account first." });
   }
 
   const user = await Users.findOne({
@@ -37,11 +42,4 @@ export const Me = async (req, res) => {
   if (!user) return res.status(404).json({ msg: "User Not Found." });
 
   res.status(200).json(user);
-};
-
-export const logOut = (req, res) => {
-  req.session.destroy((e) => {
-    if (e) return res.status(400).json({ msg: "Can't log out." });
-    res.status(200).json({ msg: "You have been logged out." });
-  });
 };
