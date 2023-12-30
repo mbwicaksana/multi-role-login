@@ -10,10 +10,10 @@ import ProductRoute from "./routes/ProductRoute.js";
 dotenv.config();
 const app = express();
 
-// const sessionStore = SequelizeStore(session.Store);
-// const store = new sessionStore({
-//   db: db,
-// });
+const sessionStore = SequelizeStore(session.Store);
+const store = new sessionStore({
+  db: db,
+});
 
 // (async () => {
 //   await db.sync();
@@ -24,7 +24,7 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
-    // store: store,
+    store: store,
     cookie: {
       secure: "auto",
     },
@@ -42,7 +42,7 @@ app.use(express.json());
 app.use(UserRoute);
 app.use(ProductRoute);
 
-// store.sync();
+store.sync();
 
 app.listen(process.env.APP_PORT, () => {
   console.log("Server is running on port " + process.env.APP_PORT);
