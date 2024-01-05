@@ -15,7 +15,9 @@ const FormEditUser = () => {
   useEffect(() => {
     const getUserById = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/users/${id}`);
+        const response = await axios.get(
+          `https://api.windelov.my.id/users/${id}`
+        );
         setName(response.data.name);
         setEmail(response.data.email);
         setRole(response.data.role);
@@ -31,7 +33,7 @@ const FormEditUser = () => {
   const updateUser = async (e) => {
     e.preventDefault();
     try {
-      await axios.patch(`http://localhost:5000/users/${id}`, {
+      await axios.patch(`https://api.windelov.my.id/users/${id}`, {
         name: name,
         email: email,
         password: password,

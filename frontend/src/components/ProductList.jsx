@@ -10,12 +10,12 @@ const ProductList = () => {
   }, []);
 
   const getProducts = async () => {
-    const response = await axios.get("http://localhost:5000/products");
+    const response = await axios.get("https://api.windelov.my.id/products");
     setProducts(response.data);
   };
 
   const deleteProduct = async (productId) => {
-    await axios.delete(`http://localhost:5000/products/${productId}`);
+    await axios.delete(`https://api.windelov.my.id/products/${productId}`);
     getProducts();
   };
 
