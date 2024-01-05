@@ -5,17 +5,13 @@ export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await Users.findOne({
-      where: { email },
-    });
+    const user = await Users.findOne({ where: { email } });
 
     if (!user) {
       return res.status(404).json({ msg: "User Not Found." });
     }
 
-    const passwordMatch = await argon2.verify(user.password, password);
-
-    if (!passwordMatch) {
+    if (!(await argon2.verify(user.password, password))) {
       return res.status(400).json({ msg: "Wrong Password." });
     }
 

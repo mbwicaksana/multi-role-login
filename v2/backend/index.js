@@ -11,10 +11,10 @@ import AuthRoute from "./routes/AuthRoute.js";
 dotenv.config();
 const app = express();
 
-const sessionStore = SequelizeStore(session.Store);
-const store = new sessionStore({
-  db: db,
-});
+// const sessionStore = SequelizeStore(session.Store);
+// const store = new sessionStore({
+//   db: db,
+// });
 
 // (async () => {
 //   await db.sync();
@@ -25,18 +25,18 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
-    store: store,
+    // store: store,
     cookie: {
       secure: "auto",
     },
-  })
+  }),
 );
 
 app.use(
   cors({
     credentials: true,
     origin: "http://localhost:3000",
-  })
+  }),
 );
 
 app.use(express.json());
