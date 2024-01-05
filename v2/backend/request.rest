@@ -1,0 +1,60 @@
+// CREATE USER
+POST http://localhost:5000/users
+Content-Type: application/json
+
+{
+  "name": "caca",
+  "email": "caca@gmail.com",
+  "password": "1234",
+  "confirmPassword": "1234",
+  "role": "user"
+}
+###
+
+// GET ALL USER
+GET http://localhost:5000/users
+###
+
+// UPDATE USER
+PATCH http://localhost:5000/users/9fd01974-97d1-4738-8584-3261db634f9e
+Content-Type: application/json
+
+{
+  "name": "bayu",
+  "email": "bayu@gmail.com",
+  "password": "",
+  "confirmPassword": "",
+  "role": "user"
+}
+###
+
+// DELETE USER
+DELETE http://localhost:5000/users/UUID_HERE
+###
+
+// LOGIN ADMIN
+POST http://localhost:5000/login
+Content-Type: application/json
+
+{
+  "email": "admin@gmail.com",
+  "password": "1234"
+}
+###
+
+// LOGIN USER
+POST http://localhost:5000/login
+Content-Type: application/json
+
+{
+  "email": "admin@gmail.com",
+  "password": "1234"
+}
+###
+
+// GET CURRENT USER
+GET http://localhost:5000/myAccount
+
+###
+// LOGOUT CURRENT USER
+DELETE http://localhost:5000/logout

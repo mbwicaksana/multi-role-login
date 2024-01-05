@@ -1,39 +1,70 @@
 import Users from "../models/UserModel.js";
 import argon2 from "argon2";
 
-export const login = async (req, res) => {
-  const user = await Users.findOne({
-    where: {
-      email: req.body.email,
-    },
-  });
+export const loginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-  if (!user) return res.status(404).json({ msg: "User Not Found." });
+    const user = await Users.findOne({
+      where: { email },
+    });
+
+    if (!user) {
+      return res.status(404).json({ msg: "User Not Found." });
+    }
+
+    const passwordMatch = await argon2.verify(user.password, password);
+
+    if (!passwordMatch) {
+      return res.status(400).json({ msg: "Wrong Password." });
+    }
+
+    req.session.userId = user.uuid;
+
+    res.status(200).json({
+      uuid: user.uuid,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ msg: "Internal Server Error." });
+  }
 };
 
-export const logout = async (req, res) => {
-  req.session.destroy((e) => {
-    if (e) return res.status(400).json({ msg: "Can't Logout." });
+export const logoutUser = async (req, res) => {
+  try {
+    await req.session.destroy();
     res.status(200).json({ msg: "You've been logged out." });
-  });
+  } catch (e) {
+    console.error(e);
+    res.status(400).json({ msg: "Can't Logout." });
+  }
 };
 
-export const myAccount = async (req, res) => {
-  console.log(req.session);
+export const getMyAccount = async (req, res) => {
+  try {
+    if (!req.session.userId) {
+      return res
+        .status(401)
+        .json({ msg: "Please login into your account first." });
+    }
 
-  if (!req.session.userId)
-    return res
-      .status(401)
-      .json({ msg: "Please login into your account first." });
+    const user = await Users.findOne({
+      attributes: ["uuid", "name", "email", "role"],
+      where: {
+        uuid: req.session.userId,
+      },
+    });
 
-  const user = await Users.findOne({
-    attributes: ["uuid", "name", "email", "role"],
-    where: {
-      uuid: req.session.userId,
-    },
-  });
+    if (!user) {
+      return res.status(404).json({ msg: "User Not Found." });
+    }
 
-  if (!user) return res.status(404).json({ msg: "User Not Found." });
-
-  res.status(200).json(user);
+    res.status(200).json(user);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ msg: "Internal Server Error." });
+  }
 };

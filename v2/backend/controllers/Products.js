@@ -4,32 +4,22 @@ import { Op } from "sequelize";
 
 export const getProducts = async (req, res) => {
   try {
-    let response;
-    if (req.role === "admin") {
-      response = await Products.findAll({
-        attributes: ["uuid", "name", "price"],
-        include: [
-          {
-            model: Users,
-            attributes: ["name", "email"],
-          },
-        ],
-      });
-    } else {
-      response = await Products.findAll({
-        attributes: ["uuid", "name", "price"],
-        where: {
-          userId: req.userId,
+    const options = {
+      attributes: ["uuid", "name", "price"],
+      include: [
+        {
+          model: Users,
+          attributes: ["name", "email"],
         },
-        include: [
-          {
-            model: Users,
-            attributes: ["name", "email"],
-          },
-        ],
-      });
+      ],
+    };
+
+    if (req.role !== "admin") {
+      options.where = { userId: req.userId };
     }
-    res.status(200).json(response);
+
+    const products = await Products.findAll(options);
+    res.status(200).json(products);
   } catch (e) {
     res.status(500).json({ msg: e.message });
   }
@@ -37,130 +27,93 @@ export const getProducts = async (req, res) => {
 
 export const getProductById = async (req, res) => {
   try {
-    let response;
+    const options = {
+      attributes: ["uuid", "name", "price"],
+      include: [
+        {
+          model: Users,
+          attributes: ["name", "email"],
+        },
+      ],
+    };
 
-    const product = await Products.findOne({
-      where: {
-        uuid: req.params.id,
-      },
-    });
+    const product = await Products.findOne({ where: { uuid: req.params.id } });
 
     if (!product) return res.status(404).json({ msg: "Product Not Found." });
 
-    if (req.role === "admin") {
-      response = await Products.findOne({
-        attributes: ["uuid", "name", "price"],
-        where: {
-          id: product.id,
-        },
-        include: [
-          {
-            model: Users,
-            attributes: ["name", "email"],
-          },
-        ],
-      });
-    } else {
-      response = await Products.findOne({
-        attributes: ["uuid", "name", "price"],
-        where: {
-          [Op.and]: [{ id: product.id }, { userId: req.userId }],
-        },
-        include: [
-          {
-            model: Users,
-            attributes: ["name", "email"],
-          },
-        ],
-      });
+    if (req.role !== "admin") {
+      options.where = {
+        [Op.and]: [{ id: product.id }, { userId: req.userId }],
+      };
     }
-    res.status(200).json(response);
+
+    const fetchedProduct = await Products.findOne(options);
+    res.status(200).json(fetchedProduct);
   } catch (e) {
     res.status(500).json({ msg: e.message });
   }
 };
 
 export const createProduct = async (req, res) => {
-  const { name, price } = req.body;
-
   try {
-    await Products.create({
-      name: name,
-      price: price,
+    const { name, price } = req.body;
+
+    const product = await Products.create({
+      name,
+      price,
       userId: req.userId,
     });
-    res.status(201).json({ msg: "Product Created." });
+
+    res.status(201).json({ msg: "Product Created", product });
   } catch (e) {
-    res.status(500).json({ msg: e.message });
+    res.status(500).json({ msg: "Error creating product." });
   }
 };
 
 export const updateProduct = async (req, res) => {
   try {
-    const product = await Products.findOne({
-      where: {
-        uuid: req.params.id,
-      },
-    });
+    const product = await Products.findOne({ where: { uuid: req.params.id } });
 
     if (!product) return res.status(404).json({ msg: "Product Not Found." });
-    const { name, price } = req.body;
-    if (req.role === "admin") {
-      await Products.update(
-        { name, price },
-        {
-          where: {
-            id: product.id,
-          },
-        },
-      );
-    } else {
-      if (req.userId !== product.userId)
-        return res.status(403).json({ msg: "Access Denied." });
 
-      await Products.update(
-        { name, price },
-        {
-          where: {
-            [Op.and]: [{ id: product.id }, { userId: req.userId }],
-          },
-        },
-      );
+    const { name, price } = req.body;
+
+    const updateOptions = {
+      where: { id: product.id },
+    };
+
+    if (req.role !== "admin") {
+      updateOptions.where = {
+        [Op.and]: [{ id: product.id }, { userId: req.userId }],
+      };
     }
+
+    await Products.update({ name, price }, updateOptions);
+
     res.status(200).json({ msg: "Product Updated." });
   } catch (e) {
-    res.status(500).json({ msg: e.message });
+    res.status(500).json({ msg: "Error updating product." }); // More informative error message
   }
 };
 
 export const deleteProduct = async (req, res) => {
   try {
-    const product = await Products.findOne({
-      where: {
-        uuid: req.params.id,
-      },
-    });
+    const product = await Products.findOne({ where: { uuid: req.params.id } });
 
     if (!product) return res.status(404).json({ msg: "Product Not Found." });
 
-    if (req.role === "admin") {
-      await Products.destroy({
-        where: {
-          id: product.id,
-        },
-      });
-    } else {
-      if (req.userId !== product.userId)
-        return res.status(403).json({ msg: "Access Denied." });
+    const deleteOptions = { where: { id: product.id } };
 
-      await Products.destroy({
-        where: {
-          [Op.and]: [{ id: product.id }, { userId: req.userId }],
-        },
-      });
+    if (req.role !== "admin") {
+      deleteOptions.where = {
+        [Op.and]: [{ id: product.id }, { userId: req.userId }],
+      };
     }
-    res.status(200).json({ msg: "Product Deleted." });
+
+    await Products.destroy(deleteOptions);
+
+    res.status(204).json(); // No content response for successful deletion
   } catch (e) {
-    res.status(500).json({ msg: e.message });
+    res.status(500).json({ msg: "Error deleting product." }); // More informative error message
   }
 };
