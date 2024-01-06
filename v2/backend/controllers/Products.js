@@ -112,8 +112,8 @@ export const deleteProduct = async (req, res) => {
 
     await Products.destroy(deleteOptions);
 
-    res.status(204).json(); // No content response for successful deletion
+    res.status(204).json();
   } catch (e) {
-    res.status(500).json({ msg: "Error deleting product." }); // More informative error message
+    res.status(500).json({ msg: "Error deleting product." });
   }
 };

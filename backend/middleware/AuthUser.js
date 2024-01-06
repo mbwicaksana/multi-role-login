@@ -9,7 +9,7 @@ export const verifyUser = async (req, res, next) => {
 
   const user = await Users.findOne({
     where: {
-      uuid: req.session.userId,D
+      uuid: req.session.userId,
     },
   });
 
