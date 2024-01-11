@@ -4,7 +4,7 @@ export const verifyUser = async (req, res, next) => {
   try {
     if (!req.session.userId) {
       return res
-        .status(401)
+        .st2atus(401)
         .json({ msg: "Please login into your account first." });
     }
 
