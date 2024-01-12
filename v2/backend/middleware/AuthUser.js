@@ -1,10 +1,10 @@
-import Users from "../../../backend/models/UserModel";
+import Users from "../models/UserModel.js";
 
 export const verifyUser = async (req, res, next) => {
   try {
     if (!req.session.userId) {
       return res
-        .st2atus(401)
+        .status(401)
         .json({ msg: "Please login into your account first." });
     }
 
