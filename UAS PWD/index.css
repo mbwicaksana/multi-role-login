@@ -1,0 +1,26 @@
+body {
+  background-color: rgb(40, 203, 203);
+}
+h1 {
+  color: black;
+  font-size: 40px;
+  text-align: center;
+}
+p {
+  font-family: "Times New Roman";
+  font-size: 30px;
+  text-align: center;
+}
+a:link {
+  color: white;
+}
+a:visited {
+  color: white;
+}
+a:hover {
+  color: white;
+  text-decoration: none;
+}
+a:active {
+  color: white;
+}

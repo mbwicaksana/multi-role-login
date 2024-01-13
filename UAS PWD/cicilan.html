@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Cicilan Pinjaman</title>
+  </head>
+  <body>
+    <h1>Cicilan Pinjaman</h1>
+
+    <button type="button" id="hitung">Hitung</button>
+    <script>
+      function hitungCicilan() {
+        var jumlahPinjaman = prompt("Masukkan jumlah pinjaman: ");
+        var tingkatBunga = prompt("Masukkan tingkat bunga: ");
+        var durasiPinjaman = prompt("Masukkan durasi pinjaman (dalam bulan): ");
+
+        var cicilanBulanan =
+          (jumlahPinjaman * tingkatBunga) / (durasiPinjaman * 12);
+
+        var keterangan = "Tidak terjangkau";
+        if (cicilanBulanan < jumlahPinjaman * 0.3) {
+          keterangan = "Terjangkau";
+        }
+
+        var cicilanBulananBulat = Math.ceil(cicilanBulanan);
+
+        alert(
+          "Cicilan bulanan: " +
+            cicilanBulananBulat +
+            "\nKeterangan: " +
+            keterangan
+        );
+      }
+
+      document
+        .getElementById("hitung")
+        .addEventListener("click", hitungCicilan);
+    </script>
+  </body>
+</html>
