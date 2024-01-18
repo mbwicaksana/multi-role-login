@@ -10,19 +10,19 @@
     <button type="button" id="hitung">Hitung</button>
     <script>
       function hitungCicilan() {
-        var jumlahPinjaman = prompt("Masukkan jumlah pinjaman: ");
-        var tingkatBunga = prompt("Masukkan tingkat bunga: ");
-        var durasiPinjaman = prompt("Masukkan durasi pinjaman (dalam bulan): ");
+        let jumlahPinjaman = prompt("Masukkan jumlah pinjaman: ");
+        let tingkatBunga = prompt("Masukkan tingkat bunga: ");
+        let durasiPinjaman = prompt("Masukkan durasi pinjaman (dalam bulan): ");
 
-        var cicilanBulanan =
+        let cicilanBulanan =
           (jumlahPinjaman * tingkatBunga) / (durasiPinjaman * 12);
 
-        var keterangan = "Tidak terjangkau";
+        let keterangan = "Tidak terjangkau";
         if (cicilanBulanan < jumlahPinjaman * 0.3) {
           keterangan = "Terjangkau";
         }
 
-        var cicilanBulananBulat = Math.ceil(cicilanBulanan);
+        let cicilanBulananBulat = Math.ceil(cicilanBulanan);
 
         alert(
           "Cicilan bulanan: " +

@@ -1,24 +1,23 @@
+<!DOCTYPE html>
 <html>
   <head>
     <link rel="stylesheet" type="text/css" href="data-mahasiswa.css" />
+    <title>Input Data Mahasiswa</title>
   </head>
   <body>
     <h1>Input Data Mahasiswa</h1>
-    <table border="0" width="300" height="300" align="center">
-      <form align="center">
+    <table align="center">
+      <form>
         <tr>
-          <td><p style="margin-right: 100px">NPM</p></td>
-          <td>:</td>
+          <td><p>NPM</p></td>
+          <td><input type="text" name="npm" size="25" /></td>
+        </tr>
+        <tr>
+          <td><p>Nama</p></td>
           <td><input type="text" name="nama" size="25" /></td>
         </tr>
         <tr>
-          <td><p style="margin-right: 100px">Nama</p></td>
-          <td>:</td>
-          <td><input type="text" name="nama" size="25" /></td>
-        </tr>
-        <tr>
-          <td><p style="margin-right: 100px">Kelas</p></td>
-          <td>:</td>
+          <td><p>Kelas</p></td>
           <td>
             <select name="pilihan" id="pilihan">
               <option value="opsi1">S5F</option>
@@ -26,31 +25,16 @@
           </td>
         </tr>
         <tr>
-          <td><p style="margin-right: 90px">No Telp</p></td>
-          <td>:</td>
-          <td><input type="text" name="nama" size="25" /></td>
+          <td><p>No Telp</p></td>
+          <td><input type="text" name="no_telp" size="25" /></td>
         </tr>
         <tr>
-          <td><p style="margin-right: 100px">Alamat</p></td>
-          <td>:</td>
-          <td><textarea name="Masukan" rows="5" cols="50"></textarea></td>
+          <td><p>Alamat</p></td>
+          <td><textarea name="alamat" rows="5" cols="50"></textarea></td>
         </tr>
         <tr>
           <td></td>
-          <td></td>
-          <td>
-            <input
-              type="SUBMIT"
-              value="Submit"
-              style="
-                background-color: rgb(55, 200, 55);
-                color: white;
-                padding: 1px 166px;
-                font-size: 16px;
-              "
-              ="300"
-            />
-          </td>
+          <td><input type="submit" value="Submit" class="submit-button" /></td>
         </tr>
       </form>
     </table>
