@@ -1,5 +1,7 @@
 import { configureStore, createAction, createReducer } from "@reduxjs/toolkit";
 
+const addToCart = createAction("ADD_TO_CART");
+
 const initialState = {
   cart: [
     {
@@ -13,9 +15,9 @@ const initialState = {
   ],
 };
 
-const cartReducer = createReducer(initialState, (builder) => {
-  builder.addCase("ADD_TO_CART", (state, action) => {
-    state.cart.push(action.payload);
+const cartReducer = createReducer([], (builder) => {
+  builder.addCase(addToCart, (state, action) => {
+    state.push(action.payload);
   });
 });
 
@@ -24,3 +26,11 @@ const store = configureStore({
     cart: cartReducer,
   },
 });
+
+console.log("ON CREATE STORE : ", store.getState());
+
+store.subscribe(() => {
+  console.log("STORE CHANGE : ", store.getState());
+});
+
+store.dispatch(addToCart({ id: 1, qty: 100 }));
