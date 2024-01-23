@@ -21,6 +21,7 @@ const Login = () => {
 
   const Auth = (e) => {
     e.preventDefault();
+
     dispatch(LoginUser({ email, password }));
   };
 

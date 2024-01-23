@@ -8,14 +8,16 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user, isLoading, error } = useSelector((state) => state.user);
+  const { user, isError, isLoading, message } = useSelector(
+    (state) => state.user
+  );
 
   useEffect(() => {
     if (user) {
       navigate("/dashboard");
+      dispatch(reset());
     }
-    dispatch(reset());
-  }, [user, error, dispatch, navigate]);
+  }, [user, isError, isLoading]);
 
   const verifyCredentials = (e) => {
     e.preventDefault();
@@ -103,7 +105,7 @@ const Login = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="example@gmail.com"
-                  className="w-full px-4 py-2 border border-gray-400 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-4 py-2 border border-gray-400 rounded-lg focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
               <div>
@@ -120,8 +122,9 @@ const Login = () => {
                   className="w-full px-4 py-2 border border-gray-400 rounded-md focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
-
-              {error && <div className="text-red-600 text-center">{error}</div>}
+              {isError && (
+                <p className="text-red-600 font-semibold">{message}</p>
+              )}
               <div>
                 <button className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:ring-blue-500 focus:outline-none">
                   {isLoading ? "Loading . . ." : "Login"}

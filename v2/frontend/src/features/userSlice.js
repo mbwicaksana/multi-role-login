@@ -4,7 +4,8 @@ import axios from "axios";
 const initialState = {
   user: null,
   isLoading: false,
-  error: null,
+  isError: false,
+  message: "",
 };
 
 const handleError = (error) => {
@@ -24,7 +25,10 @@ export const createSession = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(handleError(error));
+      if (error.response) {
+        const message = error.response.data.msg;
+        return thunkAPI.rejectWithValue(message);
+      }
     }
   }
 );
@@ -65,7 +69,6 @@ export const userSlice = createSlice({
     builder
       .addCase(createSession.pending, (state) => {
         state.isLoading = true;
-        state.error = null; // Clear any previous errors
       })
       .addCase(createSession.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -73,11 +76,11 @@ export const userSlice = createSlice({
       })
       .addCase(createSession.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload;
+        state.isError = true;
+        state.message = action.payload;
       })
       .addCase(recentSession.pending, (state) => {
         state.isLoading = true;
-        state.error = null; // Clear any previous errors
       })
       .addCase(recentSession.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -85,7 +88,8 @@ export const userSlice = createSlice({
       })
       .addCase(recentSession.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload;
+        state.isError = true;
+        state.message = action.payload;
       })
       .addCase(deleteSession.fulfilled, (state) => {
         state.user = null;
