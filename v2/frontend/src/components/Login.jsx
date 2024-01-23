@@ -11,7 +11,7 @@ const Login = () => {
   const { user, isLoading, error } = useSelector((state) => state.user);
 
   useEffect(() => {
-    if (user && !error) {
+    if (user) {
       navigate("/dashboard");
     }
     dispatch(reset());
@@ -23,20 +23,20 @@ const Login = () => {
   };
 
   return (
-    <section class="bg-white">
-      <div class="lg:grid lg:min-h-screen lg:grid-cols-12">
-        <section class="relative flex h-32 items-end bg-gray-900 lg:col-span-5 lg:h-full xl:col-span-6">
+    <section className="bg-gray-200">
+      <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
+        <section className="relative flex h-32 items-end bg-gray-900 lg:col-span-5 lg:h-full xl:col-span-6">
           <img
             alt="Night"
-            src="https://images.unsplash.com/photo-1617195737496-bc30194e3a19?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
-            class="absolute inset-0 h-full w-full object-cover opacity-80"
+            src="https://images.unsplash.com/photo-1498036882173-b41c28a8ba34?q=80&w=1364&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            className="absolute inset-0 h-full w-full object-cover opacity-80"
           />
 
-          <div class="hidden lg:relative lg:block lg:p-12">
-            <a class="block text-white" href="/">
-              <span class="sr-only">Home</span>
+          <div className="hidden lg:relative lg:block lg:p-12">
+            <a className="block text-white" href="/">
+              <span className="sr-only">Home</span>
               <svg
-                class="h-8 sm:h-10"
+                className="h-8 sm:h-10"
                 viewBox="0 0 28 24"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -48,27 +48,26 @@ const Login = () => {
               </svg>
             </a>
 
-            <h2 class="mt-6 text-2xl font-bold text-white sm:text-3xl md:text-4xl">
-              Welcome to Squid 🦑
+            <h2 className="mt-6 text-2xl font-bold text-white sm:text-3xl md:text-4xl">
+              Welcome to Windelov
             </h2>
 
-            <p class="mt-4 leading-relaxed text-white/90">
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eligendi
-              nam dolorum aliquam, quibusdam aperiam voluptatum.
+            <p className="mt-4 leading-relaxed text-white/90">
+              Silahkan Login untuk melanjutkan.
             </p>
           </div>
         </section>
 
-        <main class="flex items-center justify-center px-8 py-8 sm:px-12 lg:col-span-7 lg:px-16 lg:py-12 xl:col-span-6">
-          <div class="max-w-xl lg:max-w-3xl">
-            <div class="relative -mt-16 block lg:hidden">
+        <main className="flex items-center justify-center px-8 py-8 sm:px-12 lg:col-span-7 lg:px-16 lg:py-12 xl:col-span-6">
+          <div className="max-w-xl lg:max-w-3xl">
+            <div className="relative -mt-16 block lg:hidden">
               <a
-                class="inline-flex h-16 w-16 items-center justify-center rounded-full bg-white text-blue-600 sm:h-20 sm:w-20"
+                className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-white text-blue-600 sm:h-20 sm:w-20"
                 href="/"
               >
-                <span class="sr-only">Home</span>
+                <span className="sr-only">Home</span>
                 <svg
-                  class="h-8 sm:h-10"
+                  className="h-8 sm:h-10"
                   viewBox="0 0 28 24"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
@@ -80,142 +79,53 @@ const Login = () => {
                 </svg>
               </a>
 
-              <h1 class="mt-2 text-2xl font-bold text-gray-900 sm:text-3xl md:text-4xl">
-                Welcome to Windelosv 🦑
+              <h1 className="mt-2 text-2xl font-bold text-gray-900 sm:text-3xl md:text-4xl">
+                Welcome to Windelov
               </h1>
 
-              <p class="mt-4 leading-relaxed text-gray-500">
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                Eligendi nam dolorum aliquam, quibusdam aperiam voluptatum.
+              <p className="mt-4 leading-relaxed text-gray-500">
+                Silahkan Login untuk melanjutkan.
               </p>
             </div>
 
-            <form action="#" class="mt-8 grid grid-cols-6 gap-6">
-              <div class="col-span-6 sm:col-span-3">
-                <label
-                  for="FirstName"
-                  class="block text-sm font-medium text-gray-700"
-                >
-                  First Name
+            <form
+              onSubmit={verifyCredentials}
+              className="mt-8 grid grid-cols-1 gap-y-6"
+            >
+              <div>
+                <label htmlFor="Email" className="block text-gray-700">
+                  Email
                 </label>
-
-                <input
-                  type="text"
-                  id="FirstName"
-                  name="first_name"
-                  class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
-                />
-              </div>
-
-              <div class="col-span-6 sm:col-span-3">
-                <label
-                  for="LastName"
-                  class="block text-sm font-medium text-gray-700"
-                >
-                  Last Name
-                </label>
-
-                <input
-                  type="text"
-                  id="LastName"
-                  name="last_name"
-                  class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
-                />
-              </div>
-
-              <div class="col-span-6">
-                <label
-                  for="Email"
-                  class="block text-sm font-medium text-gray-700"
-                >
-                  {" "}
-                  Email{" "}
-                </label>
-
                 <input
                   type="email"
                   id="Email"
                   name="email"
-                  class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="example@gmail.com"
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
-
-              <div class="col-span-6 sm:col-span-3">
-                <label
-                  for="Password"
-                  class="block text-sm font-medium text-gray-700"
-                >
-                  {" "}
-                  Password{" "}
+              <div>
+                <label htmlFor="Password" className="block text-gray-700">
+                  Password
                 </label>
-
                 <input
                   type="password"
                   id="Password"
                   name="password"
-                  class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+                  placeholder="********"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
 
-              <div class="col-span-6 sm:col-span-3">
-                <label
-                  for="PasswordConfirmation"
-                  class="block text-sm font-medium text-gray-700"
-                >
-                  Password Confirmation
-                </label>
-
-                <input
-                  type="password"
-                  id="PasswordConfirmation"
-                  name="password_confirmation"
-                  class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
-                />
-              </div>
-
-              <div class="col-span-6">
-                <label for="MarketingAccept" class="flex gap-4">
-                  <input
-                    type="checkbox"
-                    id="MarketingAccept"
-                    name="marketing_accept"
-                    class="h-5 w-5 rounded-md border-gray-200 bg-white shadow-sm"
-                  />
-
-                  <span class="text-sm text-gray-700">
-                    I want to receive emails about events, product updates and
-                    company announcements.
-                  </span>
-                </label>
-              </div>
-
-              <div class="col-span-6">
-                <p class="text-sm text-gray-500">
-                  By creating an account, you agree to our
-                  <a href="#" class="text-gray-700 underline">
-                    {" "}
-                    terms and conditions{" "}
-                  </a>
-                  and
-                  <a href="#" class="text-gray-700 underline">
-                    privacy policy
-                  </a>
-                  .
-                </p>
-              </div>
-
-              <div class="col-span-6 sm:flex sm:items-center sm:gap-4">
-                <button class="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500">
-                  Create an account
+              {error && <div className="text-red-600 text-center">{error}</div>}
+              <div>
+                <button className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:ring-blue-500 focus:outline-none">
+                  {isLoading ? "Loading . . ." : "Login"}
                 </button>
-
-                <p class="mt-4 text-sm text-gray-500 sm:mt-0">
-                  Already have an account?
-                  <a href="#" class="text-gray-700 underline">
-                    Log in
-                  </a>
-                  .
-                </p>
               </div>
             </form>
           </div>

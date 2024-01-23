@@ -9,14 +9,14 @@ const initialState = {
 
 const handleError = (error) => {
   if (error.response) {
-    return error.response.data.message;
+    return error.response.data.msg;
   }
   return "Something went wrong.";
 };
 
 export const createSession = createAsyncThunk(
   "user/createSession",
-  async (user, { rejectWithValue }) => {
+  async (user, thunkAPI) => {
     try {
       const response = await axios.post("http://localhost:5000/login", {
         email: user.email,
@@ -24,20 +24,20 @@ export const createSession = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
-      return rejectWithValue(handleError(error));
+      return thunkAPI.rejectWithValue(handleError(error));
     }
   }
 );
 
 export const recentSession = createAsyncThunk(
   "user/recentSession",
-  async ({ rejectWithValue }) => {
+  async (thunkAPI) => {
     try {
       const response = await axios.get("http://localhost:5000/myAccount");
       return response.data;
     } catch (error) {
       if (error.response) {
-        return rejectWithValue(handleError(error));
+        return thunkAPI.rejectWithValue(handleError(error));
       }
     }
   }
@@ -45,12 +45,12 @@ export const recentSession = createAsyncThunk(
 
 export const deleteSession = createAsyncThunk(
   "user/deleteSession",
-  async ({ rejectWithValue }) => {
+  async (thunkAPI) => {
     try {
       await axios.delete("http://localhost:5000/logout");
       return null; // No payload needed
     } catch (error) {
-      return rejectWithValue(handleError(error));
+      return thunkAPI.rejectWithValue(handleError(error));
     }
   }
 );
