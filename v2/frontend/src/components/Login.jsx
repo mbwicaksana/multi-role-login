@@ -17,7 +17,7 @@ const Login = () => {
       navigate("/dashboard");
       dispatch(reset());
     }
-  }, [user, isError, isLoading]);
+  }, [user, isError, isLoading, dispatch, navigate]);
 
   const verifyCredentials = (e) => {
     e.preventDefault();
