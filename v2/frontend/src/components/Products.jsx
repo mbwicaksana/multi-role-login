@@ -3,10 +3,12 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, NavLink } from "react-router-dom";
 import { recentSession, reset, deleteSession } from "../features/userSlice";
+import axios from "axios";
 
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(true);
+  const [products, setProducts] = useState([]);
   const { isError, user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -25,6 +27,16 @@ const Dashboard = () => {
     navigate("/");
   };
 
+  const getProducts = async () => {
+    const response = await axios.get("http://localhost:5000/products");
+    setProducts(response.data);
+  };
+
+  const deleteProduct = async (productId) => {
+    await axios.delete(`http://localhost:5000/products/${productId}`);
+    getProducts();
+  };
+
   useEffect(() => {
     dispatch(recentSession());
   }, [dispatch]);
@@ -34,6 +46,10 @@ const Dashboard = () => {
       navigate("/");
     }
   }, [isError, navigate]);
+
+  useEffect(() => {
+    getProducts();
+  }, []);
 
   return (
     <>
@@ -189,18 +205,16 @@ const Dashboard = () => {
         <header>
           <div
             className={`mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 ${
-              isSidebarOpen && "sm:ml-64"
+              isSidebarOpen && "md:ml-64"
             }`}
           >
             <div className="sm:flex sm:items-center sm:justify-between">
               <div className="text-center sm:text-left">
                 <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">
-                  Welcome Back, {user && user.name}
+                  Products
                 </h1>
 
-                <p className="mt-1.5 text-sm text-gray-500">
-                  Have A Great Day! 🎉
-                </p>
+                <p className="mt-1.5 text-sm text-gray-500">List of Products</p>
                 <div className="mt-4 flex py-2 flex-col gap-4 sm:mt-0 sm:flex-row sm:items-center">
                   <NavLink
                     to="/products/add"
@@ -209,6 +223,99 @@ const Dashboard = () => {
                     Create New Product
                   </NavLink>
                 </div>
+              </div>
+            </div>
+            <div className="overflow-x-auto">
+              <div className="w-full overflow-x-scroll">
+                <table className="table-auto w-full">
+                  <thead className="ltr:text-left rtl:text-right">
+                    <tr>
+                      <th className="px-4 py-2 font-medium text-gray-900">
+                        No
+                      </th>
+                      <th className="px-4 py-2 font-medium text-gray-900">
+                        Product Name
+                      </th>
+                      <th className="px-4 py-2 font-medium text-gray-900">
+                        Price
+                      </th>
+                      <th className="px-4 py-2 font-medium text-gray-900">
+                        Created By
+                      </th>
+                      <th className="px-4 py-2"></th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    <tr>
+                      <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+                        John Doe
+                      </td>
+                      <td class="whitespace-nowrap px-4 py-2 text-gray-700">
+                        24/05/1995
+                      </td>
+                      <td class="whitespace-nowrap px-4 py-2 text-gray-700">
+                        Web Developer
+                      </td>
+                      <td class="whitespace-nowrap px-4 py-2 text-gray-700">
+                        $120,000
+                      </td>
+                      <td class="whitespace-nowrap px-4 py-2">
+                        <a
+                          href="#"
+                          class="inline-block rounded bg-indigo-600 px-4 py-2 text-xs font-medium text-white hover:bg-indigo-700"
+                        >
+                          View
+                        </a>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+                        Jane Doe
+                      </td>
+                      <td class="whitespace-nowrap px-4 py-2 text-gray-700">
+                        04/11/1980
+                      </td>
+                      <td class="whitespace-nowrap px-4 py-2 text-gray-700">
+                        Web Designer
+                      </td>
+                      <td class="whitespace-nowrap px-4 py-2 text-gray-700">
+                        $100,000
+                      </td>
+                      <td class="whitespace-nowrap px-4 py-2">
+                        <a
+                          href="#"
+                          class="inline-block rounded bg-indigo-600 px-4 py-2 text-xs font-medium text-white hover:bg-indigo-700"
+                        >
+                          View
+                        </a>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
+                        Gary Barlow
+                      </td>
+                      <td class="whitespace-nowrap px-4 py-2 text-gray-700">
+                        24/05/1995
+                      </td>
+                      <td class="whitespace-nowrap px-4 py-2 text-gray-700">
+                        Singer
+                      </td>
+                      <td class="whitespace-nowrap px-4 py-2 text-gray-700">
+                        $20,000
+                      </td>
+                      <td class="whitespace-nowrap px-4 py-2">
+                        <a
+                          href="#"
+                          class="inline-block rounded bg-indigo-600 px-4 py-2 text-xs font-medium text-white hover:bg-indigo-700"
+                        >
+                          View
+                        </a>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
