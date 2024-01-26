@@ -51,6 +51,34 @@ const Dashboard = () => {
     getProducts();
   }, []);
 
+  const tableItems = [
+    {
+      name: "Muhammad Bayu Wicaksana",
+      email: "bayu@example.com",
+      position: "Software engineer",
+    },
+    {
+      name: "Olivia Emma",
+      email: "oliviaemma@example.com",
+      position: "Product designer",
+    },
+    {
+      name: "William Benjamin",
+      email: "william.benjamin@example.com",
+      position: "Front-end developer",
+    },
+    {
+      name: "Henry Theodore",
+      email: "henrytheodore@example.com",
+      position: "Laravel engineer",
+    },
+    {
+      name: "Amelia Elijah",
+      email: "amelia.elijah@example.com",
+      position: "Open source manager",
+    },
+  ];
+
   return (
     <>
       <nav className="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
@@ -208,116 +236,63 @@ const Dashboard = () => {
               isSidebarOpen && "md:ml-64"
             }`}
           >
-            <div className="sm:flex sm:items-center sm:justify-between">
-              <div className="text-center sm:text-left">
-                <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">
-                  Products
-                </h1>
-
-                <p className="mt-1.5 text-sm text-gray-500">List of Products</p>
-                <div className="mt-4 flex py-2 flex-col gap-4 sm:mt-0 sm:flex-row sm:items-center">
+            {/* START OF TABLE */}
+            <div className="max-w-screen-xl mx-auto px-4 md:px-8">
+              <div className="items-start justify-between md:flex">
+                <div className="max-w-lg">
+                  <h3 className="text-gray-800 text-xl font-bold sm:text-2xl">
+                    Products List
+                  </h3>
+                  <p className="text-gray-600 mt-2">
+                    You can add, edit, and delete products here.
+                  </p>
+                </div>
+                <div className="mt-3 md:mt-0">
                   <NavLink
-                    to="/products/add"
-                    className="block rounded-lg bg-indigo-600 px-5 py-3 text-sm font-medium text-white transition hover:bg-indigo-700 focus:outline-none focus:ring"
+                    to="http://localhost:5000/products/add"
+                    className="inline-block px-4 py-2 text-white duration-150 font-medium bg-indigo-600 rounded-lg hover:bg-indigo-500 active:bg-indigo-700 md:text-sm"
                   >
-                    Create New Product
+                    Add Products
                   </NavLink>
                 </div>
               </div>
-            </div>
-            <div className="overflow-x-auto">
-              <div className="w-full overflow-x-scroll">
-                <table className="table-auto w-full">
-                  <thead className="ltr:text-left rtl:text-right">
+              <div className="mt-12 shadow-sm border rounded-lg overflow-x-auto">
+                <table className="w-full table-auto text-sm text-left">
+                  <thead className="bg-gray-50 text-gray-600 font-medium border-b">
                     <tr>
-                      <th className="px-4 py-2 font-medium text-gray-900">
-                        No
-                      </th>
-                      <th className="px-4 py-2 font-medium text-gray-900">
-                        Product Name
-                      </th>
-                      <th className="px-4 py-2 font-medium text-gray-900">
-                        Price
-                      </th>
-                      <th className="px-4 py-2 font-medium text-gray-900">
-                        Created By
-                      </th>
-                      <th className="px-4 py-2"></th>
+                      <th className="py-3 px-6">Product Name</th>
+                      <th className="py-3 px-6">Price</th>
+                      <th className="py-3 px-6">Created By</th>
+                      <th className="py-3 px-6"></th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-200">
-                    <tr>
-                      <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-                        John Doe
-                      </td>
-                      <td class="whitespace-nowrap px-4 py-2 text-gray-700">
-                        24/05/1995
-                      </td>
-                      <td class="whitespace-nowrap px-4 py-2 text-gray-700">
-                        Web Developer
-                      </td>
-                      <td class="whitespace-nowrap px-4 py-2 text-gray-700">
-                        $120,000
-                      </td>
-                      <td class="whitespace-nowrap px-4 py-2">
-                        <a
-                          href="#"
-                          class="inline-block rounded bg-indigo-600 px-4 py-2 text-xs font-medium text-white hover:bg-indigo-700"
-                        >
-                          View
-                        </a>
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-                        Jane Doe
-                      </td>
-                      <td class="whitespace-nowrap px-4 py-2 text-gray-700">
-                        04/11/1980
-                      </td>
-                      <td class="whitespace-nowrap px-4 py-2 text-gray-700">
-                        Web Designer
-                      </td>
-                      <td class="whitespace-nowrap px-4 py-2 text-gray-700">
-                        $100,000
-                      </td>
-                      <td class="whitespace-nowrap px-4 py-2">
-                        <a
-                          href="#"
-                          class="inline-block rounded bg-indigo-600 px-4 py-2 text-xs font-medium text-white hover:bg-indigo-700"
-                        >
-                          View
-                        </a>
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">
-                        Gary Barlow
-                      </td>
-                      <td class="whitespace-nowrap px-4 py-2 text-gray-700">
-                        24/05/1995
-                      </td>
-                      <td class="whitespace-nowrap px-4 py-2 text-gray-700">
-                        Singer
-                      </td>
-                      <td class="whitespace-nowrap px-4 py-2 text-gray-700">
-                        $20,000
-                      </td>
-                      <td class="whitespace-nowrap px-4 py-2">
-                        <a
-                          href="#"
-                          class="inline-block rounded bg-indigo-600 px-4 py-2 text-xs font-medium text-white hover:bg-indigo-700"
-                        >
-                          View
-                        </a>
-                      </td>
-                    </tr>
+                  <tbody className="text-gray-600 divide-y">
+                    {products.map((product, index) => (
+                      <tr key={product.uuid}>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          {product.name}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          {product.price}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          {product.user.name}
+                        </td>
+                        <td className="text-right px-6 whitespace-nowrap">
+                          <a className="py-2 px-3 font-medium text-indigo-600 hover:text-indigo-500 duration-150 hover:bg-gray-50 rounded-lg">
+                            Edit
+                          </a>
+                          <button className="py-2 leading-none px-3 font-medium text-red-600 hover:text-red-500 duration-150 hover:bg-gray-50 rounded-lg">
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
             </div>
+            {/* END OF TABLE */}
           </div>
         </header>
       </div>

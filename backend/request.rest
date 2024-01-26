@@ -38,7 +38,7 @@ POST http://localhost:5000/login
 Content-Type: application/json
 
 {
-  "email": "user1@gmail.com",
+  "email": "bayu@gmail.com",
   "password": "1234"
 }
 
@@ -54,7 +54,7 @@ Content-Type: application/json
 
 ###
 // GET CURRENT USER
-GET http://localhost:5000/me
+GET http://localhost:5000/myAccount
 
 ###
 // LOGOUT CURRENT USER
@@ -78,7 +78,7 @@ POST http://localhost:5000/products
 Content-Type: application/json
 
 {
-  "name": "Product 5",
+  "name": "Bakso 1",
   "price": "1000"
 }
 
