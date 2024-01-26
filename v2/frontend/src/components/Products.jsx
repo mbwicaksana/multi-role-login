@@ -229,7 +229,7 @@ const Dashboard = () => {
           </ul>
         </div>
       </aside>
-      <div className="grid h-screen place-content-center sm:place-content-start sm:pt-8 bg-white px-4">
+      <div className=" h-screen mt-10 place-content-center sm:place-content-start sm:pt-8 bg-white px-4">
         <header>
           <div
             className={`mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 ${
@@ -261,21 +261,33 @@ const Dashboard = () => {
                   <thead className="bg-gray-50 text-gray-600 font-medium border-b">
                     <tr>
                       <th className="py-3 px-6">Product Name</th>
-                      <th className="py-3 px-6">Price</th>
-                      <th className="py-3 px-6">Created By</th>
+                      <th className="py-3 px-6 hidden lg:table-cell">Price</th>
+                      <th className="py-3 px-6 hidden sm:table-cell">
+                        Created By
+                      </th>
                       <th className="py-3 px-6"></th>
                     </tr>
                   </thead>
                   <tbody className="text-gray-600 divide-y">
                     {products.map((product, index) => (
                       <tr key={product.uuid}>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-6 py-4 whitespace-nowrap font-medium w-full sm:w-auto max-w-0 sm:max-w-none">
                           {product.name}
+                          <dl className="lg:hidden font-normal">
+                            <dt className="sr-only">Price</dt>
+                            <dd className="md:hidden mt-1 text-gray-700 sm:text-gray-500">
+                              {product.price}
+                            </dd>
+                            <dt className="sr-only">Created By</dt>
+                            <dd className="sm:hidden mt-1 text-gray-500">
+                              {product.user.name}
+                            </dd>
+                          </dl>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="hidden lg:table-cell px-6 py-4 whitespace-nowrap">
                           {product.price}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap">
                           {product.user.name}
                         </td>
                         <td className="text-right px-6 whitespace-nowrap">
