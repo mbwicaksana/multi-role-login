@@ -19,6 +19,7 @@ const Products = () => {
       navigate("/");
     }
   }, [isError, navigate]);
+
   return (
     <Layout>
       <ProductList />

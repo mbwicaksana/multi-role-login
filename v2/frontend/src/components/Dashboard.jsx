@@ -1,5 +1,4 @@
-import React from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, NavLink } from "react-router-dom";
 import { recentSession, reset, deleteSession } from "../features/userSlice";
@@ -8,8 +7,11 @@ const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(true);
   const { isError, user } = useSelector((state) => state.user);
+  const [modalOpen, setModalOpen] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const trigger = useRef(null);
+  const modal = useRef(null);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -24,6 +26,32 @@ const Dashboard = () => {
     dispatch(reset());
     navigate("/");
   };
+
+  // close on click outside
+  useEffect(() => {
+    const clickHandler = ({ target }) => {
+      if (!modal.current) return;
+      if (
+        !modalOpen ||
+        modal.current.contains(target) ||
+        trigger.current.contains(target)
+      )
+        return;
+      setModalOpen(false);
+    };
+    document.addEventListener("click", clickHandler);
+    return () => document.removeEventListener("click", clickHandler);
+  });
+
+  // close if the esc key is pressed
+  useEffect(() => {
+    const keyHandler = ({ keyCode }) => {
+      if (!modalOpen || keyCode !== 27) return;
+      setModalOpen(false);
+    };
+    document.addEventListener("keydown", keyHandler);
+    return () => document.removeEventListener("keydown", keyHandler);
+  });
 
   useEffect(() => {
     dispatch(recentSession());

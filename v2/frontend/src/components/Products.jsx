@@ -1,7 +1,7 @@
 import React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, NavLink } from "react-router-dom";
+import { useNavigate, NavLink, useParams } from "react-router-dom";
 import { recentSession, reset, deleteSession } from "../features/userSlice";
 import axios from "axios";
 
@@ -9,9 +9,16 @@ const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(true);
   const [products, setProducts] = useState([]);
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState("");
+  const [msg, setMsg] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
   const { isError, user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { id } = useParams();
+  const trigger = useRef(null);
+  const modal = useRef(null);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -37,6 +44,21 @@ const Dashboard = () => {
     getProducts();
   };
 
+  const updateProduct = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.patch(`http://localhost:5000/products/${id}`, {
+        name: name,
+        price: price,
+      });
+      navigate("/products");
+    } catch (e) {
+      if (e.response) {
+        setMsg(e.response.data.msg);
+      }
+    }
+  };
+
   useEffect(() => {
     dispatch(recentSession());
   }, [dispatch]);
@@ -51,33 +73,22 @@ const Dashboard = () => {
     getProducts();
   }, []);
 
-  const tableItems = [
-    {
-      name: "Muhammad Bayu Wicaksana",
-      email: "bayu@example.com",
-      position: "Software engineer",
-    },
-    {
-      name: "Olivia Emma",
-      email: "oliviaemma@example.com",
-      position: "Product designer",
-    },
-    {
-      name: "William Benjamin",
-      email: "william.benjamin@example.com",
-      position: "Front-end developer",
-    },
-    {
-      name: "Henry Theodore",
-      email: "henrytheodore@example.com",
-      position: "Laravel engineer",
-    },
-    {
-      name: "Amelia Elijah",
-      email: "amelia.elijah@example.com",
-      position: "Open source manager",
-    },
-  ];
+  useEffect(() => {
+    const getProductById = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/products/${id}`
+        );
+        setName(response.data.name);
+        setPrice(response.data.price);
+      } catch (e) {
+        if (e.response) {
+          setMsg(e.response.data.msg);
+        }
+      }
+    };
+    getProductById();
+  }, [id]);
 
   return (
     <>
@@ -229,6 +240,8 @@ const Dashboard = () => {
           </ul>
         </div>
       </aside>
+
+      {/* START OF MAIN CONTENT */}
       <div className=" h-screen mt-10 place-content-center sm:place-content-start sm:pt-8 bg-white px-4">
         <header>
           <div
@@ -236,6 +249,77 @@ const Dashboard = () => {
               isSidebarOpen && "md:ml-64"
             }`}
           >
+            {/* START OF MODAL */}
+            <div
+              className={`fixed left-0 top-0 flex h-full min-h-screen w-full items-center justify-center bg-dark/90 px-4 py-5 ${
+                modalOpen ? "block" : "hidden"
+              }`}
+            >
+              <div
+                ref={modal}
+                onFocus={() => setModalOpen(true)}
+                onBlur={() => setModalOpen(false)}
+                className="border border-style-solid border-color-black w-full max-w-[570px] rounded-[20px] bg-white px-8 py-12 text-center dark:bg-dark-2 md:px-[70px] md:py-[60px]"
+              >
+                <h3 className="pb-[18px] text-xl font-semibold text-dark dark:text-white sm:text-2xl">
+                  Edit Your Product
+                </h3>
+                <span
+                  className={`mx-auto mb-6 inline-block h-1 w-[90px] rounded bg-primary`}
+                ></span>
+                {/* START OF MODAL FORM */}
+                <div>
+                  <label for="name" class="sr-only">
+                    Product Name
+                  </label>
+
+                  <div class="relative">
+                    <input
+                      type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      class="w-full rounded-lg border-gray-600 p-4 pe-12 text-sm shadow-sm"
+                      placeholder="Enter Product Name"
+                    />
+                  </div>
+                </div>
+                <span
+                  className={`mx-auto mb-6 inline-block h-1 w-[90px] rounded bg-primary`}
+                ></span>
+                <div>
+                  <label for="price" class="sr-only">
+                    Product Price
+                  </label>
+
+                  <div class="relative">
+                    <input
+                      type="text"
+                      value={price}
+                      onChange={(e) => setPrice(e.target.value)}
+                      class="w-full rounded-lg border-gray-600 p-4 pe-12 text-sm shadow-sm"
+                      placeholder="Enter Produc Price"
+                    />
+                  </div>
+                </div>
+                {/* END OF MODAL FORM */}
+                <div className="-mx-3 flex flex-wrap">
+                  <div className="w-1/2 px-3">
+                    <button
+                      onClick={() => setModalOpen(false)}
+                      className="block w-full rounded-md border border-stroke p-3 text-center text-base font-medium text-dark transition hover:border-red-600 hover:bg-red-600 hover:text-white dark:text-white"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                  <div className="w-1/2 px-3">
+                    <button className="block w-full rounded-md border border-stroke p-3 text-center text-base font-medium text-dark transition hover:border-blue-600 hover:bg-blue-600 hover:text-white dark:text-white">
+                      Submit
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* END OF MODAL */}
             {/* START OF TABLE */}
             <div className="max-w-screen-xl mx-auto px-4 md:px-8">
               <div className="items-start justify-between md:flex">
@@ -249,7 +333,7 @@ const Dashboard = () => {
                 </div>
                 <div className="mt-3 md:mt-0">
                   <NavLink
-                    to="http://localhost:5000/products/add"
+                    to="/products/add"
                     className="inline-block px-4 py-2 text-white duration-150 font-medium bg-indigo-600 rounded-lg hover:bg-indigo-500 active:bg-indigo-700 md:text-sm"
                   >
                     Add Products
@@ -291,10 +375,17 @@ const Dashboard = () => {
                           {product.user.name}
                         </td>
                         <td className="text-right px-6 whitespace-nowrap">
-                          <a className="py-2 px-3 font-medium text-indigo-600 hover:text-indigo-500 duration-150 hover:bg-gray-50 rounded-lg">
+                          <NavLink
+                            to={`/products/edit/${product.uuid}`}
+                            onClick={() => setModalOpen(true)}
+                            className="py-2 px-3 font-medium text-indigo-600 hover:text-indigo-500 duration-150 hover:bg-gray-50 rounded-lg"
+                          >
                             Edit
-                          </a>
-                          <button className="py-2 leading-none px-3 font-medium text-red-600 hover:text-red-500 duration-150 hover:bg-gray-50 rounded-lg">
+                          </NavLink>
+                          <button
+                            onClick={() => deleteProduct(product.uuid)}
+                            className="py-2 leading-none px-3 font-medium text-red-600 hover:text-red-500 duration-150 hover:bg-gray-50 rounded-lg"
+                          >
                             Delete
                           </button>
                         </td>
@@ -308,6 +399,7 @@ const Dashboard = () => {
           </div>
         </header>
       </div>
+      {/* END OF MAIN CONTENT */}
     </>
   );
 };
