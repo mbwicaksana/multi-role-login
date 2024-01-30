@@ -1,5 +1,5 @@
 import React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, NavLink, useParams } from "react-router-dom";
 import { recentSession, reset, deleteSession } from "../features/userSlice";
@@ -8,7 +8,9 @@ import axios from "axios";
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(true);
-  const [products, setProducts] = useState([]);
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState("");
+  const [msg, setMsg] = useState("");
   const { isError } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -28,15 +30,37 @@ const Dashboard = () => {
     navigate("/");
   };
 
-  const getProducts = async () => {
-    const response = await axios.get("http://localhost:5000/products");
-    setProducts(response.data);
+  const updateProduct = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.patch(`http://localhost:5000/products/${id}`, {
+        name: name,
+        price: price,
+      });
+      navigate("/products");
+    } catch (e) {
+      if (e.response) {
+        setMsg(e.response.data.msg);
+      }
+    }
   };
 
-  const deleteProduct = async (productId) => {
-    await axios.delete(`http://localhost:5000/products/${productId}`);
-    getProducts();
-  };
+  useEffect(() => {
+    const getProductById = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/products/${id}`
+        );
+        setName(response.data.name);
+        setPrice(response.data.price);
+      } catch (e) {
+        if (e.response) {
+          setMsg(e.response.data.msg);
+        }
+      }
+    };
+    getProductById();
+  }, [id]);
 
   useEffect(() => {
     dispatch(recentSession());
@@ -47,10 +71,6 @@ const Dashboard = () => {
       navigate("/");
     }
   }, [isError, navigate]);
-
-  useEffect(() => {
-    getProducts();
-  }, []);
 
   return (
     <>
@@ -204,88 +224,76 @@ const Dashboard = () => {
       </aside>
 
       {/* START OF MAIN CONTENT */}
-      <div className=" h-screen mt-10 place-content-center sm:place-content-start sm:pt-8 bg-white px-4">
+      <div className=" h-screen mt-10 place-content-center sm:place-content-start sm:pt-8 bg-gray-200 px-4">
         <header>
           <div
             className={`mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 ${
               isSidebarOpen && "md:ml-64"
             }`}
           >
-            {/* START OF TABLE */}
-            <div className="max-w-screen-xl mx-auto px-4 md:px-8">
-              <div className="items-start justify-between md:flex">
-                <div className="max-w-lg">
-                  <h3 className="text-gray-800 text-xl font-bold sm:text-2xl">
-                    Products List
-                  </h3>
-                  <p className="text-gray-600 mt-2">
-                    You can add, edit, and delete products here.
-                  </p>
+            {/* START OF CONTENT */}
+            <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
+              <div className="mx-auto max-w-lg text-center">
+                <h1 className="text-2xl font-bold sm:text-3xl">
+                  Edit Your Product
+                </h1>
+                <p className="opacity-60 text-red-800 font-semibold">{msg}</p>
+              </div>
+
+              <form
+                onSubmit={updateProduct}
+                className="mx-auto mb-0 mt-8 max-w-md space-y-4"
+              >
+                <div>
+                  <label for="name" className="sr-only">
+                    Product Name
+                  </label>
+
+                  <div className="relative">
+                    <input
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      type="text"
+                      className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-lg"
+                      placeholder="Product Name"
+                    />
+                  </div>
                 </div>
-                <div className="mt-3 md:mt-0">
+
+                <div>
+                  <label for="price" className="sr-only">
+                    Product Price
+                  </label>
+
+                  <div className="relative">
+                    <input
+                      type="text"
+                      value={price}
+                      onChange={(e) => setPrice(e.target.value)}
+                      className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-lg"
+                      placeholder="Product Price"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between">
                   <NavLink
-                    to="/products/add"
-                    className="inline-block px-4 py-2 text-white duration-150 font-medium bg-indigo-600 rounded-lg hover:bg-indigo-500 active:bg-indigo-700 md:text-sm"
+                    to="/products"
+                    type="button"
+                    className="inline-block mx-auto px-20 rounded-lg bg-red-500 px-5 py-3 text-sm font-medium text-white hover:bg-red-400"
                   >
-                    Add Products
+                    Cancel
                   </NavLink>
+                  <button
+                    type="submit"
+                    className="inline-block mx-auto px-20 rounded-lg bg-blue-500 px-5 py-3 text-sm font-medium text-white hover:bg-blue-400"
+                  >
+                    Save
+                  </button>
                 </div>
-              </div>
-              <div className="mt-12 shadow-sm border rounded-lg overflow-x-auto">
-                <table className="w-full table-auto text-sm text-left">
-                  <thead className="bg-gray-50 text-gray-600 font-medium border-b">
-                    <tr>
-                      <th className="py-3 px-6">Product Name</th>
-                      <th className="py-3 px-6 hidden lg:table-cell">Price</th>
-                      <th className="py-3 px-6 hidden sm:table-cell">
-                        Created By
-                      </th>
-                      <th className="py-3 px-6"></th>
-                    </tr>
-                  </thead>
-                  <tbody className="text-gray-600 divide-y">
-                    {products.map((product, index) => (
-                      <tr key={product.uuid}>
-                        <td className="px-6 py-4 whitespace-nowrap font-medium w-full sm:w-auto max-w-0 sm:max-w-none">
-                          {product.name}
-                          <dl className="lg:hidden font-normal">
-                            <dt className="sr-only">Price</dt>
-                            <dd className="md:hidden mt-1 text-gray-700 sm:text-gray-500">
-                              {product.price}
-                            </dd>
-                            <dt className="sr-only">Created By</dt>
-                            <dd className="sm:hidden mt-1 text-gray-500">
-                              {product.user.name}
-                            </dd>
-                          </dl>
-                        </td>
-                        <td className="hidden lg:table-cell px-6 py-4 whitespace-nowrap">
-                          {product.price}
-                        </td>
-                        <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap">
-                          {product.user.name}
-                        </td>
-                        <td className="text-right px-6 whitespace-nowrap">
-                          <NavLink
-                            to={`/products/edit/${product.uuid}`}
-                            className="py-2 px-3 font-medium text-indigo-600 hover:text-indigo-500 duration-150 hover:bg-gray-50 rounded-lg"
-                          >
-                            Edit
-                          </NavLink>
-                          <button
-                            onClick={() => deleteProduct(product.uuid)}
-                            className="py-2 leading-none px-3 font-medium text-red-600 hover:text-red-500 duration-150 hover:bg-gray-50 rounded-lg"
-                          >
-                            Delete
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              </form>
             </div>
-            {/* END OF TABLE */}
+            {/* END OF CONTENT */}
           </div>
         </header>
       </div>
