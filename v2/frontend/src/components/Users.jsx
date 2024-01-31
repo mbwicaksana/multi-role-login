@@ -8,10 +8,8 @@ import axios from "axios";
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(true);
-  const [name, setName] = useState("");
-  const [price, setPrice] = useState("");
-  const [msg, setMsg] = useState("");
   const { isError, user } = useSelector((state) => state.user);
+  const [users, setUsers] = useState([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -29,19 +27,14 @@ const Dashboard = () => {
     navigate("/");
   };
 
-  const saveProduct = async (e) => {
-    e.preventDefault();
-    try {
-      await axios.post("http://localhost:5000/products", {
-        name: name,
-        price: price,
-      });
-      navigate("/products");
-    } catch (e) {
-      if (e.response) {
-        setMsg(e.response.data.msg);
-      }
-    }
+  const getUsers = async () => {
+    const response = await axios.get("http://localhost:5000/users");
+    setUsers(response.data);
+  };
+
+  const deleteUser = async (userId) => {
+    await axios.delete(`http://localhost:5000/users/${userId}`);
+    getUsers();
   };
 
   useEffect(() => {
@@ -53,6 +46,10 @@ const Dashboard = () => {
       navigate("/");
     }
   }, [isError, navigate]);
+
+  useEffect(() => {
+    getUsers();
+  }, []);
 
   return (
     <>
@@ -217,69 +214,79 @@ const Dashboard = () => {
               isSidebarOpen && "md:ml-64"
             }`}
           >
-            {/* START OF CONTENT */}
-            <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
-              <div className="mx-auto max-w-lg text-center">
-                <h1 className="text-2xl font-bold sm:text-3xl">
-                  Add New Product
-                </h1>
-                <p className="opacity-60 text-red-800 font-semibold">{msg}</p>
-              </div>
-
-              <form
-                onSubmit={saveProduct}
-                className="mx-auto mb-0 mt-8 max-w-md space-y-4"
-              >
-                <div>
-                  <label labelfor="name" className="sr-only">
-                    Product Name
-                  </label>
-
-                  <div className="relative">
-                    <input
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      type="text"
-                      className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-lg"
-                      placeholder="Product Name"
-                    />
-                  </div>
+            {/* START OF TABLE */}
+            <div className="max-w-screen-xl mx-auto px-4 md:px-8">
+              <div className="items-start justify-between md:flex">
+                <div className="max-w-lg">
+                  <h3 className="text-gray-800 text-xl font-bold sm:text-2xl">
+                    Users List
+                  </h3>
+                  <p className="text-gray-600 mt-2">
+                    You can add, edit, and delete users here.
+                  </p>
                 </div>
-
-                <div>
-                  <label labelfor="price" className="sr-only">
-                    Product Price
-                  </label>
-
-                  <div className="relative">
-                    <input
-                      type="text"
-                      value={price}
-                      onChange={(e) => setPrice(e.target.value)}
-                      className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-lg"
-                      placeholder="Product Price"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between">
+                <div className="mt-3 md:mt-0">
                   <NavLink
-                    to="/products"
-                    type="button"
-                    className="inline-block mx-auto px-20 rounded-lg bg-red-500 px-5 py-3 text-sm font-medium text-white hover:bg-red-400"
+                    to="/users/add"
+                    className="inline-block px-4 py-2 text-white duration-150 font-medium bg-indigo-600 rounded-lg hover:bg-indigo-500 active:bg-indigo-700 md:text-sm"
                   >
-                    Cancel
+                    Add User
                   </NavLink>
-                  <button
-                    type="submit"
-                    className="inline-block mx-auto px-20 rounded-lg bg-blue-500 px-5 py-3 text-sm font-medium text-white hover:bg-blue-400"
-                  >
-                    Save
-                  </button>
                 </div>
-              </form>
+              </div>
+              <div className="mt-12 shadow-sm border rounded-lg overflow-x-auto">
+                <table className="w-full table-auto text-sm text-left">
+                  <thead className="bg-gray-50 text-gray-600 font-medium border-b">
+                    <tr>
+                      <th className="py-3 px-6">Name</th>
+                      <th className="py-3 px-6 hidden lg:table-cell">Email</th>
+                      <th className="py-3 px-6 hidden sm:table-cell">Role</th>
+                      <th className="py-3 px-6"></th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-gray-600 divide-y">
+                    {users.map((user) => (
+                      <tr key={user.uuid}>
+                        <td className="px-6 py-4 whitespace-nowrap font-medium w-full sm:w-auto max-w-0 sm:max-w-none">
+                          {user.name}
+                          <dl className="lg:hidden font-normal">
+                            <dt className="sr-only">Email</dt>
+                            <dd className="md:hidden mt-1 text-gray-700 sm:text-gray-500">
+                              {user.email}
+                            </dd>
+                            <dt className="sr-only">Role</dt>
+                            <dd className="sm:hidden mt-1 text-gray-500">
+                              {user.role}
+                            </dd>
+                          </dl>
+                        </td>
+                        <td className="hidden lg:table-cell px-6 py-4 whitespace-nowrap">
+                          {user.email}
+                        </td>
+                        <td className="hidden sm:table-cell px-6 py-4 whitespace-nowrap">
+                          {user.role}
+                        </td>
+                        <td className="text-right px-6 whitespace-nowrap">
+                          <NavLink
+                            to={`/users/edit/${user.uuid}`}
+                            className="py-2 px-3 font-medium text-indigo-600 hover:text-indigo-500 duration-150 hover:bg-gray-50 rounded-lg"
+                          >
+                            Edit
+                          </NavLink>
+                          <button
+                            onClick={() => deleteUser(user.uuid)}
+                            className="py-2 leading-none px-3 font-medium text-red-600 hover:text-red-500 duration-150 hover:bg-gray-50 rounded-lg"
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
-            {/* END OF CONTENT */}
+            {/* END OF TABLE */}
           </div>
         </header>
       </div>

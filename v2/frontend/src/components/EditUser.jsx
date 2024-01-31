@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, NavLink } from "react-router-dom";
+import { useNavigate, NavLink, useParams } from "react-router-dom";
 import { recentSession, reset, deleteSession } from "../features/userSlice";
 import axios from "axios";
 
@@ -9,11 +9,15 @@ const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(true);
   const [name, setName] = useState("");
-  const [price, setPrice] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [role, setRole] = useState("");
   const [msg, setMsg] = useState("");
   const { isError, user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { id } = useParams();
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -29,20 +33,39 @@ const Dashboard = () => {
     navigate("/");
   };
 
-  const saveProduct = async (e) => {
+  const updateUser = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/products", {
+      await axios.patch(`http://localhost:5000/users/${id}`, {
         name: name,
-        price: price,
+        email: email,
+        password: password,
+        confirmPassword: confirmPassword,
+        role: role,
       });
-      navigate("/products");
+      navigate("/users");
     } catch (e) {
       if (e.response) {
         setMsg(e.response.data.msg);
       }
     }
   };
+
+  useEffect(() => {
+    const getUserById = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/users/${id}`);
+        setName(response.data.name);
+        setEmail(response.data.email);
+        setRole(response.data.role);
+      } catch (e) {
+        if (e.response) {
+          setMsg(e.response.data.msg);
+        }
+      }
+    };
+    getUserById();
+  }, [id]);
 
   useEffect(() => {
     dispatch(recentSession());
@@ -210,7 +233,7 @@ const Dashboard = () => {
       </aside>
 
       {/* START OF MAIN CONTENT */}
-      <div className=" h-screen mt-10 place-content-center sm:place-content-start sm:pt-8 bg-white px-4">
+      <div className=" h-screen mt-10 place-content-center sm:place-content-start sm:pt-8 bg-gray-200 px-4">
         <header>
           <div
             className={`mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 ${
@@ -220,19 +243,17 @@ const Dashboard = () => {
             {/* START OF CONTENT */}
             <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
               <div className="mx-auto max-w-lg text-center">
-                <h1 className="text-2xl font-bold sm:text-3xl">
-                  Add New Product
-                </h1>
+                <h1 className="text-2xl font-bold sm:text-3xl">Edit User</h1>
                 <p className="opacity-60 text-red-800 font-semibold">{msg}</p>
               </div>
 
               <form
-                onSubmit={saveProduct}
+                onSubmit={updateUser}
                 className="mx-auto mb-0 mt-8 max-w-md space-y-4"
               >
                 <div>
                   <label labelfor="name" className="sr-only">
-                    Product Name
+                    name
                   </label>
 
                   <div className="relative">
@@ -241,30 +262,72 @@ const Dashboard = () => {
                       onChange={(e) => setName(e.target.value)}
                       type="text"
                       className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-lg"
-                      placeholder="Product Name"
+                      placeholder="Name"
                     />
                   </div>
                 </div>
-
                 <div>
-                  <label labelfor="price" className="sr-only">
-                    Product Price
+                  <label labelfor="email" className="sr-only">
+                    Email
                   </label>
 
                   <div className="relative">
                     <input
                       type="text"
-                      value={price}
-                      onChange={(e) => setPrice(e.target.value)}
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                       className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-lg"
-                      placeholder="Product Price"
+                      placeholder="Email"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label labelfor="password" className="sr-only">
+                    Password
+                  </label>
+
+                  <div className="relative">
+                    <input
+                      type="password"
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-lg"
+                      placeholder="Password"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label labelfor="confirmPassword" className="sr-only">
+                    Confirm Password
+                  </label>
+
+                  <div className="relative">
+                    <input
+                      type="password"
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-lg"
+                      placeholder="Confirm Password"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label labelfor="role" className="sr-only">
+                    Role
+                  </label>
+
+                  <div className="relative">
+                    <input
+                      type="text"
+                      value={role}
+                      onChange={(e) => setRole(e.target.value)}
+                      className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-lg"
+                      placeholder="Role"
                     />
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between">
                   <NavLink
-                    to="/products"
+                    to="/users"
                     type="button"
                     className="inline-block mx-auto px-20 rounded-lg bg-red-500 px-5 py-3 text-sm font-medium text-white hover:bg-red-400"
                   >
