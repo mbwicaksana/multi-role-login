@@ -19,7 +19,7 @@ export const createSession = createAsyncThunk(
   "user/createSession",
   async (user, thunkAPI) => {
     try {
-      const response = await axios.post("https://api.windelov.my.id//login", {
+      const response = await axios.post("https://api.windelov.my.id/login", {
         email: user.email,
         password: user.password,
       });
@@ -37,7 +37,7 @@ export const recentSession = createAsyncThunk(
   "user/recentSession",
   async (thunkAPI) => {
     try {
-      const response = await axios.get("http://localhost:5000/myAccount");
+      const response = await axios.get("https://api.windelov.my.id/myAccount");
       return response.data;
     } catch (error) {
       if (error.response) {
@@ -51,7 +51,7 @@ export const deleteSession = createAsyncThunk(
   "user/deleteSession",
   async (thunkAPI) => {
     try {
-      await axios.delete("http://localhost:5000/logout");
+      await axios.delete("https://api.windelov.my.id/logout");
       return null; // No payload needed
     } catch (error) {
       return thunkAPI.rejectWithValue(handleError(error));

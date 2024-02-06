@@ -32,13 +32,24 @@ app.use(
   })
 );
 
+<<<<<<< Updated upstream
 app.use(cors());
+=======
+app.use(
+  cors({
+    credentials: true,
+    origin: "https://www.windelov.my.id",
+  }),
+);
+>>>>>>> Stashed changes
 
 app.use(express.json());
 app.use(UserRoute);
 app.use(ProductRoute);
 app.use(AuthRoute);
 
-// store.sync();
+store.sync();
 
-app.listen();
+app.listen(process.env.APP_PORT, () => {
+  console.log("Server is Running on PORT", process.env.APP_PORT);
+});

@@ -32,7 +32,7 @@ const Dashboard = () => {
   const saveProduct = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/products", {
+      await axios.post("https//api.windelov.my.id/products", {
         name: name,
         price: price,
       });

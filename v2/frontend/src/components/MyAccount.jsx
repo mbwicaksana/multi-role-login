@@ -21,7 +21,7 @@ const MyAccount = () => {
   };
 
   const getProducts = async () => {
-    const response = await axios.get("http://localhost:5000/products");
+    const response = await axios.get("https//api.windelov.my.id/products");
     setProducts(response.data);
   };
   const logout = () => {
