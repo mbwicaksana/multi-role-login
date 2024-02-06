@@ -19,7 +19,7 @@ export const createSession = createAsyncThunk(
   "user/createSession",
   async (user, thunkAPI) => {
     try {
-      const response = await axios.post("http://localhost:5000/login", {
+      const response = await axios.post("https://api.windelov.my.id//login", {
         email: user.email,
         password: user.password,
       });
@@ -30,7 +30,7 @@ export const createSession = createAsyncThunk(
         return thunkAPI.rejectWithValue(message);
       }
     }
-  }
+  },
 );
 
 export const recentSession = createAsyncThunk(
@@ -44,7 +44,7 @@ export const recentSession = createAsyncThunk(
         return thunkAPI.rejectWithValue(handleError(error));
       }
     }
-  }
+  },
 );
 
 export const deleteSession = createAsyncThunk(
@@ -56,7 +56,7 @@ export const deleteSession = createAsyncThunk(
     } catch (error) {
       return thunkAPI.rejectWithValue(handleError(error));
     }
-  }
+  },
 );
 
 export const userSlice = createSlice({
